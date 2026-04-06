@@ -1,0 +1,328 @@
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+#game{font-family:'Share Tech Mono',monospace;color:#e8e0c8;min-height:600px;padding:1rem;background:#0d0f0a;border-radius:var(--border-radius-lg);position:relative}
+h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#f7931a;letter-spacing:2px;margin-bottom:4px}
+.subtitle{font-size:11px;color:#6a7060;margin-bottom:1rem;letter-spacing:1px}
+.top-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px}
+.btn-help{font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 10px;background:#141710;border:1px solid #2a2e20;border-radius:6px;color:#6a7060;cursor:pointer;letter-spacing:1px;transition:all 0.15s}
+.btn-help:hover{border-color:#f7931a;color:#f7931a}
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
+.stat-card{background:#141710;border:1px solid #2a2e20;border-radius:6px;padding:10px 12px}
+.stat-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:4px}
+.stat-val{font-size:18px;font-weight:700;color:#c8d4a0}
+.stat-val.money{color:#f7931a}
+.stat-val.buycost{color:#4db8a0}
+.chart-area{background:#0a0c08;border:1px solid #2a2e20;border-radius:6px;padding:8px;margin-bottom:1rem}
+.chart-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:6px}
+#priceCanvas{display:block;width:100%;height:100px}
+.hint-bar{font-size:11px;color:#6a7060;text-align:center;margin-top:4px;min-height:16px}
+.goal-area{background:#0a0c08;border:1px solid #2a2e20;border-radius:6px;padding:10px 12px;margin-bottom:1rem}
+.goal-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:8px}
+.goal-title{font-family:'Orbitron',sans-serif;font-size:13px;color:#f7931a;margin-bottom:6px}
+.progress-track{background:#1a1c16;border-radius:3px;height:10px;width:100%;margin-bottom:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:3px;transition:width 0.3s,background-color 0.4s}
+.goal-meta{display:flex;justify-content:space-between;font-size:10px;color:#6a7060}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
+.btn{font-family:'Share Tech Mono',monospace;font-size:13px;padding:12px;border:1px solid;border-radius:6px;cursor:pointer;letter-spacing:1px;transition:all 0.15s}
+.btn-buy{background:#1a1200;border-color:#f7931a;color:#f7931a}
+.btn-buy:hover{background:#f7931a;color:#0d0f0a}
+.btn-sell{background:#001a12;border-color:#4db8a0;color:#4db8a0}
+.btn-sell:hover{background:#4db8a0;color:#0d0f0a}
+.btn:disabled{opacity:0.3;cursor:not-allowed}
+.log-area{background:#0a0c08;border:1px solid #2a2e20;border-radius:6px;padding:8px;margin-bottom:1rem;height:80px;overflow-y:auto}
+.log-area::-webkit-scrollbar{width:4px}
+.log-area::-webkit-scrollbar-thumb{background:#2a2e20}
+.log-line{font-size:11px;line-height:1.7;color:#6a7060}
+.log-line.good{color:#4db8a0}
+.log-line.bad{color:#c87060}
+.log-line.upgrade{color:#f7931a}
+.rigs-area{margin-bottom:1rem}
+.rig-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:6px}
+.rig-grid{display:flex;flex-wrap:wrap;gap:6px}
+.rig{width:32px;height:32px;background:#141710;border:1px solid #2a2e20;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.rig.active{border-color:#4db8a0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
+.upgrade-banner{display:none;background:#1a1000;border:1px solid #f7931a;border-radius:6px;padding:10px 14px;margin-bottom:1rem;font-size:12px;color:#f7931a;text-align:center}
+.btc-held{font-size:11px;color:#6a7060;text-align:center;margin-bottom:8px}
+#instructions{display:none;position:absolute;inset:0;background:#0d0f0a;border-radius:var(--border-radius-lg);padding:1.5rem;z-index:10;overflow-y:auto}
+.instr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
+.instr-title{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:#f7931a;letter-spacing:2px}
+.btn-close{font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 10px;background:#141710;border:1px solid #2a2e20;border-radius:6px;color:#6a7060;cursor:pointer;letter-spacing:1px}
+.btn-close:hover{border-color:#f7931a;color:#f7931a}
+.instr-section{margin-bottom:1.2rem}
+.instr-section-title{font-size:11px;color:#f7931a;letter-spacing:2px;margin-bottom:8px;border-bottom:1px solid #2a2e20;padding-bottom:4px}
+.instr-body{font-size:12px;color:#a0a890;line-height:1.9}
+.instr-body p{margin-bottom:8px}
+.instr-list{list-style:none;padding:0;margin:6px 0 0 0}
+.instr-list li{font-size:12px;color:#a0a890;line-height:1.9;padding-left:14px;position:relative}
+.instr-list li::before{content:'//';position:absolute;left:0;color:#f7931a;font-size:10px}
+</style>
+
+<div id="game">
+  <div id="instructions">
+    <div class="instr-header">
+      <div class="instr-title">HOW TO PLAY</div>
+      <button class="btn-close" onclick="closeInstructions()">&#10005; CLOSE</button>
+    </div>
+    <div class="instr-section">
+      <div class="instr-section-title">OBJECTIVE</div>
+      <div class="instr-body"><p>Earn US dollars by buying and selling Bitcoin. Hit each cash balance goal to unlock a cheaper buy cost and a higher next goal.</p></div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-section-title">BUYING BITCOIN</div>
+      <div class="instr-body"><p>Each buy costs a flat dollar amount (starting at $200). The amount of BTC you receive depends on the current price — but you cannot see the exact price. Use the price signal chart to make your call.</p></div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-section-title">THE PRICE SIGNAL</div>
+      <div class="instr-body"><p>The chart shows the last 60 ticks of BTC price movement with no numbers on the Y axis. You cannot see whether price is at $30k or $80k — only the shape of recent movement. Read it for:</p></div>
+      <ul class="instr-list">
+        <li>Slope — is the line trending up or down lately?</li>
+        <li>Volatility — are the peaks and valleys tight or wild?</li>
+        <li>Momentum — did it spike recently, or has it been flat?</li>
+      </ul>
+    </div>
+    <div class="instr-section">
+      <div class="instr-section-title">SELLING BITCOIN</div>
+      <div class="instr-body"><p>Each sell offloads exactly 20% of your current BTC stack and returns US dollars at the current (hidden) price. Press it multiple times to scale out, or 5 times to fully exit.</p></div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-section-title">GOALS &amp; UPGRADES</div>
+      <div class="instr-body"><p>Goals track your top high USD cash balance. Sell your BTC to push it up. Hit a goal and your buy cost drops by $2.</p></div>
+    </div>
+  </div>
+
+  <div id="mainGame">
+    <div class="top-row">
+      <div>
+        <h1>&#9889; HIDDEN HASH</h1>
+        <div class="subtitle">MINE. TRADE. SURVIVE. // PRICE IS HIDDEN</div>
+      </div>
+      <button class="btn-help" onclick="openInstructions()">? HOW TO PLAY</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">USD BALANCE</div>
+        <div class="stat-val money" id="balance">$1,000</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">BTC HELD</div>
+        <div class="stat-val" id="btcHeld">0.0000</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">BUY COST</div>
+        <div class="stat-val buycost" id="buyCostDisplay">$200</div>
+      </div>
+    </div>
+
+    <div class="chart-area">
+      <div class="chart-label">PRICE SIGNAL (last 60 ticks) // SCALE HIDDEN</div>
+      <canvas id="priceCanvas" height="100"></canvas>
+      <div class="hint-bar" id="hintBar">analyzing market conditions...</div>
+    </div>
+
+    <div class="btc-held" id="portfolioVal">net worth: $1,000</div>
+
+    <div class="goal-area">
+      <div class="goal-label">CURRENT OBJECTIVE // USD BALANCE ONLY</div>
+      <div class="goal-title" id="goalTitle">REACH $2,500</div>
+      <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;background:#378add"></div></div>
+      <div class="goal-meta">
+        <span id="goalCurrent" style="color:#c8d4a0">top high: $1,000</span>
+        <span id="goalReward" style="color:#4db8a0"></span>
+        <span id="goalTarget" style="color:#6a7060">$2,500</span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn-buy" id="buyBtn" onclick="doBuy()">&#9650; BUY BTC<br><span id="buyLabel" style="font-size:10px;opacity:0.7">spend $200</span></button>
+      <button class="btn btn-sell" id="sellBtn" onclick="doSell()" disabled>&#9660; SELL 20%<br><span id="sellLabel" style="font-size:10px;opacity:0.7">partial sell</span></button>
+    </div>
+
+    <div class="upgrade-banner" id="upgradeBanner"></div>
+
+    <div class="rigs-area">
+      <div class="rig-label">MINING RIGS ONLINE</div>
+      <div class="rig-grid" id="rigGrid"></div>
+    </div>
+
+    <div class="log-area" id="logArea"></div>
+  </div>
+</div>
+
+<script>
+const GOALS=[
+  {target:2500},{target:5000},{target:10000},
+  {target:25000},{target:50000},{target:100000},
+];
+const state={
+  balance:1000,btc:0,price:30000,
+  priceHistory:[],rigCount:1,
+  tick:0,trend:0,goalIndex:0,buyCost:200,
+  topHigh:1000,
+};
+
+function openInstructions(){document.getElementById('instructions').style.display='block';}
+function closeInstructions(){document.getElementById('instructions').style.display='none';}
+function getNetWorth(){return state.balance+state.btc*state.price;}
+
+function getBarColor(pct){
+  if(pct>=100)return'#1d9e75';
+  if(pct>=75)return'#e8a020';
+  if(pct>=40)return'#d4b020';
+  if(pct>=10)return'#c8c040';
+  return'#378add';
+}
+
+function log(msg,cls=''){
+  const d=document.getElementById('logArea');
+  const l=document.createElement('div');
+  l.className='log-line'+(cls?' '+cls:'');
+  l.textContent='[T'+state.tick+'] '+msg;
+  d.appendChild(l);d.scrollTop=d.scrollHeight;
+}
+
+function updateGoalUI(){
+  if(state.balance>state.topHigh) state.topHigh=state.balance;
+
+  if(state.goalIndex>=GOALS.length){
+    document.getElementById('goalTitle').textContent='MAX LEVEL REACHED';
+    const f=document.getElementById('progressFill');
+    f.style.width='100%';f.style.background='#1d9e75';
+    document.getElementById('goalCurrent').textContent='top high: maxed';
+    document.getElementById('goalTarget').textContent='';
+    document.getElementById('goalReward').textContent='';
+    return;
+  }
+
+  const g=GOALS[state.goalIndex];
+  const floor=state.goalIndex>0?GOALS[state.goalIndex-1].target:0;
+  const range=g.target-floor;
+  const progress=Math.max(0,state.topHigh-floor);
+  const pct=Math.min(100,(progress/range)*100);
+
+  const f=document.getElementById('progressFill');
+  f.style.width=pct.toFixed(2)+'%';
+  f.style.background=getBarColor(pct);
+
+  document.getElementById('goalTitle').textContent='REACH $'+g.target.toLocaleString()+' USD';
+  document.getElementById('goalCurrent').textContent='top high: $'+Math.round(state.topHigh).toLocaleString();
+  document.getElementById('goalTarget').textContent='$'+g.target.toLocaleString();
+  const nextCost=Math.max(2,state.buyCost-2);
+  document.getElementById('goalReward').textContent='unlock: buy $'+nextCost;
+}
+
+function checkGoal(){
+  if(state.goalIndex>=GOALS.length)return;
+  const g=GOALS[state.goalIndex];
+  if(state.balance>=g.target){
+    if(state.balance>state.topHigh)state.topHigh=state.balance;
+    state.buyCost=Math.max(2,state.buyCost-2);
+    const b=document.getElementById('upgradeBanner');
+    b.style.display='block';
+    b.textContent='&#9889; GOAL $'+g.target.toLocaleString()+' CLEARED // BUY COST NOW $'+state.buyCost;
+    setTimeout(()=>{b.style.display='none'},4000);
+    log('GOAL $'+g.target.toLocaleString()+' REACHED // buy cost -> $'+state.buyCost,'upgrade');
+    state.goalIndex++;
+    updateBuyButton();updateGoalUI();
+  }
+}
+
+function updateBuyButton(){
+  document.getElementById('buyLabel').textContent='spend $'+state.buyCost;
+  document.getElementById('buyCostDisplay').textContent='$'+state.buyCost;
+  document.getElementById('buyBtn').disabled=state.balance<state.buyCost;
+}
+
+function updateSellLabel(){
+  const amt=state.btc*0.2;
+  document.getElementById('sellLabel').textContent=amt>0.00001?amt.toFixed(4)+' BTC':'partial sell';
+  document.getElementById('sellBtn').disabled=state.btc<0.0001;
+}
+
+function updateUI(){
+  document.getElementById('balance').textContent='$'+Math.round(state.balance).toLocaleString();
+  document.getElementById('btcHeld').textContent=state.btc.toFixed(4);
+  document.getElementById('portfolioVal').textContent='net worth: $'+Math.round(getNetWorth()).toLocaleString();
+  updateBuyButton();updateSellLabel();updateGoalUI();
+}
+
+function renderRigs(){
+  const g=document.getElementById('rigGrid');g.innerHTML='';
+  const icons=['&#128187;','&#9881;','&#128200;','&#9889;','&#128257;','&#128736;','&#9999;','&#128293;'];
+  for(let i=0;i<state.rigCount;i++){
+    const r=document.createElement('div');r.className='rig active';
+    r.innerHTML=icons[i%icons.length];g.appendChild(r);
+  }
+}
+
+function mineReward(){state.btc+=0.000000080;}
+
+function updatePrice(){
+  state.trend+=(Math.random()-0.49)*120;state.trend*=0.97;
+  const shock=(Math.random()<0.04)?(Math.random()-0.5)*state.price*0.12:0;
+  state.price+=state.trend+shock;
+  state.price=Math.max(5000,Math.min(500000,state.price));
+  state.priceHistory.push(state.price);
+  if(state.priceHistory.length>60)state.priceHistory.shift();
+}
+
+function getHint(){
+  const h=state.priceHistory;
+  if(h.length<5)return'initializing feed...';
+  const last=h[h.length-1],prev=h[h.length-5],chg=(last-prev)/prev;
+  const recent=h.slice(-10),vol=(Math.max(...recent)-Math.min(...recent))/last;
+  if(Math.random()<0.03)return'WHALE MOVEMENT DETECTED';
+  if(Math.random()<0.02)return'rumor: difficulty adjust incoming';
+  if(Math.abs(chg)>0.05)return chg>0?'upward momentum detected':'downward pressure detected';
+  if(vol>0.06)return'high volatility // tread carefully';
+  return'sideways chop // holding pattern';
+}
+
+function drawChart(){
+  const canvas=document.getElementById('priceCanvas');
+  const ctx=canvas.getContext('2d');
+  canvas.width=canvas.offsetWidth;canvas.height=100;
+  const h=state.priceHistory;if(h.length<2)return;
+  const mn=Math.min(...h),mx=Math.max(...h),range=mx-mn||1;
+  const W=canvas.width,H=canvas.height;
+  ctx.strokeStyle='rgba(77,184,160,0.15)';ctx.lineWidth=1;
+  for(let i=0;i<4;i++){const y=10+i*(H-10)/3;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
+  ctx.strokeStyle='#4db8a0';ctx.lineWidth=1.5;ctx.beginPath();
+  h.forEach((p,i)=>{
+    const x=(i/(h.length-1))*W,y=H-((p-mn)/range)*(H-10)-5;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+}
+
+function doBuy(){
+  if(state.balance<state.buyCost)return;
+  const acquired=state.buyCost/state.price;
+  state.balance-=state.buyCost;state.btc+=acquired;
+  log('BOUGHT '+acquired.toFixed(5)+' BTC for $'+state.buyCost+' // price unknown','good');
+  updateUI();
+}
+
+function doSell(){
+  if(state.btc<0.0001)return;
+  const portion=state.btc*0.20,proceeds=portion*state.price;
+  state.btc-=portion;state.balance+=proceeds;
+  log('SOLD 20% ('+portion.toFixed(5)+' BTC) // received $'+Math.round(proceeds).toLocaleString(),'bad');
+  updateUI();checkGoal();
+}
+
+function tick(){
+  state.tick++;updatePrice();mineReward();
+  if(state.tick%5===0)document.getElementById('hintBar').textContent=getHint();
+  drawChart();updateUI();
+  if(state.tick%10===0)checkGoal();
+}
+
+renderRigs();
+log('node online // goals track top high USD cash // sell BTC to push it up');
+updateUI();
+setInterval(tick,1500);
+</script>
