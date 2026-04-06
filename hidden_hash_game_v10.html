@@ -52,6 +52,18 @@ h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#f7931
 .rig.active{border-color:#4db8a0;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
 .upgrade-banner{display:none;background:#1a1000;border:1px solid #f7931a;border-radius:6px;padding:10px 14px;margin-bottom:1rem;font-size:12px;color:#f7931a;text-align:center}
+.hacker-area{background:#1a0a0a;border:1px solid #c83030;border-radius:6px;padding:10px 12px;margin-bottom:1rem}
+.hacker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+.hacker-label{font-size:10px;color:#c83030;letter-spacing:1px}
+.hacker-timer{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:#ff4444}
+.hacker-info{font-size:10px;color:#6a7060;margin-bottom:8px}
+.hacker-bar-track{background:#1a1c16;border-radius:3px;height:6px;width:100%;margin-bottom:8px;overflow:hidden}
+.hacker-bar-fill{height:100%;border-radius:3px;background:#ff4444;transition:width 0.3s}
+.btn-firewall{font-family:'Share Tech Mono',monospace;font-size:11px;padding:8px 14px;background:#1a0a0a;border:1px solid #c83030;border-radius:6px;color:#c83030;cursor:pointer;letter-spacing:1px;transition:all 0.15s;width:100%}
+.btn-firewall:hover,.btn-firewall:active{background:#c83030;color:#0d0f0a}
+.btn-firewall:disabled{opacity:0.3;cursor:not-allowed}
+.hacker-flash{animation:hackerFlash 0.5s ease 3}
+@keyframes hackerFlash{0%,100%{border-color:#c83030}50%{border-color:#ff0000;box-shadow:0 0 15px rgba(255,0,0,0.4)}}
 .btc-held{font-size:11px;color:#6a7060;text-align:center;margin-bottom:8px}
 #instructions{display:none;position:absolute;inset:0;background:#0d0f0a;border-radius:var(--border-radius-lg);padding:1.5rem;z-index:10;overflow-y:auto}
 .instr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
@@ -85,6 +97,9 @@ h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#f7931
   .log-area{height:60px}
   .log-line{font-size:10px}
   .rig{width:28px;height:28px;font-size:13px}
+  .hacker-area{padding:8px 10px}
+  .hacker-timer{font-size:14px}
+  .btn-firewall{font-size:10px;padding:10px 12px;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
   #instructions{padding:1rem}
   .instr-title{font-size:15px}
   .instr-body{font-size:11px}
@@ -125,6 +140,16 @@ html,body{margin:0;padding:0;background:#0d0f0a;overflow-x:hidden}
     <div class="instr-section">
       <div class="instr-section-title">GOALS &amp; UPGRADES</div>
       <div class="instr-body"><p>Goals track your top high USD cash balance. Sell your BTC to push it up. Hit a goal and your buy cost drops by $2.</p></div>
+    </div>
+    <div class="instr-section">
+      <div class="instr-section-title">HACKERS</div>
+      <div class="instr-body"><p>Hackers attack on a timer, starting every 30 seconds. When the countdown hits zero, they steal 10% of your BTC. You can't stop them — only slow them down.</p></div>
+      <ul class="instr-list">
+        <li>Pay $50 to upgrade your firewall, adding +5 seconds to the hacker interval</li>
+        <li>Each upgrade stacks — buy multiple times to push the timer further out</li>
+        <li>The countdown resets after each attack</li>
+        <li>If you have no BTC, the attack does nothing — but the timer keeps ticking</li>
+      </ul>
     </div>
   </div>
 
@@ -176,6 +201,16 @@ html,body{margin:0;padding:0;background:#0d0f0a;overflow-x:hidden}
       <button class="btn btn-sell" id="sellBtn" onclick="doSell()" disabled>&#9660; SELL 20%<br><span id="sellLabel" style="font-size:10px;opacity:0.7">partial sell</span></button>
     </div>
 
+    <div class="hacker-area" id="hackerArea">
+      <div class="hacker-header">
+        <div class="hacker-label">&#9760; HACKER THREAT</div>
+        <div class="hacker-timer" id="hackerTimer">1:30</div>
+      </div>
+      <div class="hacker-bar-track"><div class="hacker-bar-fill" id="hackerBar" style="width:100%"></div></div>
+      <div class="hacker-info" id="hackerInfo">hackers will steal BTC in 1:30 // interval: 1:30</div>
+      <button class="btn-firewall" id="firewallBtn" onclick="buyFirewall()">&#128274; UPGRADE FIREWALL — $50 // +5s delay</button>
+    </div>
+
     <div class="upgrade-banner" id="upgradeBanner"></div>
 
     <div class="rigs-area">
@@ -197,6 +232,7 @@ const state={
   priceHistory:[],rigCount:1,
   tick:0,trend:0,goalIndex:0,buyCost:200,
   topHigh:1000,
+  hackerInterval:90,hackerCountdown:90,
 };
 
 function openInstructions(){document.getElementById('instructions').style.display='block';}
@@ -349,6 +385,42 @@ function doSell(){
   updateUI();checkGoal();
 }
 
+function buyFirewall(){
+  if(state.balance<50)return;
+  state.balance-=50;
+  state.hackerInterval+=5;
+  state.hackerCountdown+=5;
+  log('FIREWALL UPGRADED // hacker interval now '+state.hackerInterval+'s','upgrade');
+  updateUI();updateHackerUI();
+}
+
+function hackerAttack(){
+  if(state.btc<0.00001){
+    log('HACK ATTEMPTED // no BTC to steal','bad');
+  }else{
+    const stolen=state.btc*0.10;
+    state.btc-=stolen;
+    log('HACKED // lost '+stolen.toFixed(5)+' BTC (10%)','bad');
+    document.getElementById('hackerArea').classList.add('hacker-flash');
+    setTimeout(()=>document.getElementById('hackerArea').classList.remove('hacker-flash'),1600);
+  }
+  state.hackerCountdown=state.hackerInterval;
+  updateUI();updateHackerUI();
+}
+
+function fmtTime(s){
+  const m=Math.floor(s/60),sec=s%60;
+  return m>0?m+':'+(sec<10?'0':'')+sec:sec+'s';
+}
+
+function updateHackerUI(){
+  const pct=(state.hackerCountdown/state.hackerInterval)*100;
+  document.getElementById('hackerTimer').textContent=fmtTime(state.hackerCountdown);
+  document.getElementById('hackerBar').style.width=pct.toFixed(1)+'%';
+  document.getElementById('hackerInfo').textContent='hackers will steal BTC in '+fmtTime(state.hackerCountdown)+' // interval: '+fmtTime(state.hackerInterval);
+  document.getElementById('firewallBtn').disabled=state.balance<50;
+}
+
 function tick(){
   state.tick++;updatePrice();mineReward();
   if(state.tick%5===0)document.getElementById('hintBar').textContent=getHint();
@@ -358,8 +430,14 @@ function tick(){
 
 renderRigs();
 log('node online // goals track top high USD cash // sell BTC to push it up');
-updateUI();
+log('WARNING: hackers detected on network // countdown started','bad');
+updateUI();updateHackerUI();
 setInterval(tick,1500);
+setInterval(function(){
+  state.hackerCountdown--;
+  if(state.hackerCountdown<=0)hackerAttack();
+  updateHackerUI();
+},1000);
 </script>
 </body>
 </html>
