@@ -7,76 +7,76 @@
 </head>
 <body>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Orbitron:wght@400;700&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-#game{font-family:'Share Tech Mono',monospace;color:#e8e0c8;min-height:600px;padding:1rem;background:#0d0f0a;border-radius:var(--border-radius-lg);position:relative}
+#game{font-family:'Inter',sans-serif;color:#e2e8f0;min-height:600px;padding:1rem;background:#0f1117;border-radius:var(--border-radius-lg);position:relative}
 h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#f7931a;letter-spacing:2px;margin-bottom:4px}
-.subtitle{font-size:11px;color:#6a7060;margin-bottom:1rem;letter-spacing:1px}
+.subtitle{font-size:11px;color:#64748b;margin-bottom:1rem;letter-spacing:1px;font-weight:500}
 .top-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px}
-.btn-help{font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 10px;background:#141710;border:1px solid #2a2e20;border-radius:6px;color:#6a7060;cursor:pointer;letter-spacing:1px;transition:all 0.15s}
-.btn-help:hover{border-color:#f7931a;color:#f7931a}
+.btn-help{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;padding:5px 10px;background:#1e2330;border:1px solid #2d3548;border-radius:8px;color:#64748b;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s}
+.btn-help:hover{border-color:#f7931a;color:#f7931a;background:#1a1400}
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem}
-.stat-card{background:#141710;border:1px solid #2a2e20;border-radius:6px;padding:10px 12px}
-.stat-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:4px}
-.stat-val{font-size:18px;font-weight:700;color:#c8d4a0}
+.stat-card{background:#1e2330;border:1px solid #2d3548;border-radius:10px;padding:10px 12px}
+.stat-label{font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:4px;font-weight:600;text-transform:uppercase}
+.stat-val{font-size:18px;font-weight:700;color:#cbd5e1}
 .stat-val.money{color:#f7931a}
-.stat-val.buycost{color:#4db8a0}
-.chart-area{background:#0a0c08;border:1px solid #2a2e20;border-radius:6px;padding:8px;margin-bottom:1rem}
-.chart-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:6px}
+.stat-val.buycost{color:#6ee7b7}
+.chart-area{background:#161b26;border:1px solid #2d3548;border-radius:10px;padding:8px;margin-bottom:1rem}
+.chart-label{font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:6px;font-weight:500}
 #priceCanvas{display:block;width:100%;height:100px}
-.hint-bar{font-size:11px;color:#6a7060;text-align:center;margin-top:4px;min-height:16px}
-.goal-area{background:#0a0c08;border:1px solid #2a2e20;border-radius:6px;padding:10px 12px;margin-bottom:1rem}
-.goal-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:8px}
+.hint-bar{font-size:11px;color:#64748b;text-align:center;margin-top:4px;min-height:16px;font-weight:500}
+.goal-area{background:#161b26;border:1px solid #2d3548;border-radius:10px;padding:10px 12px;margin-bottom:1rem}
+.goal-label{font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:8px;font-weight:600;text-transform:uppercase}
 .goal-title{font-family:'Orbitron',sans-serif;font-size:13px;color:#f7931a;margin-bottom:6px}
-.progress-track{background:#1a1c16;border-radius:3px;height:10px;width:100%;margin-bottom:4px;overflow:hidden}
-.progress-fill{height:100%;border-radius:3px;transition:width 0.3s,background-color 0.4s}
-.goal-meta{display:flex;justify-content:space-between;font-size:10px;color:#6a7060}
+.progress-track{background:#1e2330;border-radius:6px;height:10px;width:100%;margin-bottom:4px;overflow:hidden}
+.progress-fill{height:100%;border-radius:6px;transition:width 0.3s,background-color 0.4s}
+.goal-meta{display:flex;justify-content:space-between;font-size:10px;color:#64748b;font-weight:500}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1rem}
-.btn{font-family:'Share Tech Mono',monospace;font-size:13px;padding:12px;border:1px solid;border-radius:6px;cursor:pointer;letter-spacing:1px;transition:all 0.15s}
-.btn-buy{background:#1a1200;border-color:#f7931a;color:#f7931a}
-.btn-buy:hover,.btn-buy:active{background:#f7931a;color:#0d0f0a}
-.btn-sell{background:#001a12;border-color:#4db8a0;color:#4db8a0}
-.btn-sell:hover,.btn-sell:active{background:#4db8a0;color:#0d0f0a}
+.btn{font-family:'Inter',sans-serif;font-size:13px;font-weight:600;padding:12px;border:1px solid;border-radius:10px;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s}
+.btn-buy{background:rgba(247,147,26,0.1);border-color:rgba(247,147,26,0.4);color:#f7931a}
+.btn-buy:hover,.btn-buy:active{background:#f7931a;color:#0f1117}
+.btn-sell{background:rgba(110,231,183,0.08);border-color:rgba(110,231,183,0.3);color:#6ee7b7}
+.btn-sell:hover,.btn-sell:active{background:#6ee7b7;color:#0f1117}
 .btn:disabled{opacity:0.3;cursor:not-allowed}
-.log-area{background:#0a0c08;border:1px solid #2a2e20;border-radius:6px;padding:8px;margin-bottom:1rem;height:80px;overflow-y:auto}
+.log-area{background:#161b26;border:1px solid #2d3548;border-radius:10px;padding:8px;margin-bottom:1rem;height:80px;overflow-y:auto}
 .log-area::-webkit-scrollbar{width:4px}
-.log-area::-webkit-scrollbar-thumb{background:#2a2e20}
-.log-line{font-size:11px;line-height:1.7;color:#6a7060}
-.log-line.good{color:#4db8a0}
-.log-line.bad{color:#c87060}
+.log-area::-webkit-scrollbar-thumb{background:#2d3548;border-radius:4px}
+.log-line{font-size:11px;line-height:1.7;color:#64748b;font-weight:500}
+.log-line.good{color:#6ee7b7}
+.log-line.bad{color:#f87171}
 .log-line.upgrade{color:#f7931a}
 .rigs-area{margin-bottom:1rem}
-.rig-label{font-size:10px;color:#6a7060;letter-spacing:1px;margin-bottom:6px}
+.rig-label{font-size:10px;color:#64748b;letter-spacing:1px;margin-bottom:6px;font-weight:600;text-transform:uppercase}
 .rig-grid{display:flex;flex-wrap:wrap;gap:6px}
-.rig{width:32px;height:32px;background:#141710;border:1px solid #2a2e20;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:15px}
-.rig.active{border-color:#4db8a0;animation:pulse 2s infinite}
+.rig{width:32px;height:32px;background:#1e2330;border:1px solid #2d3548;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px}
+.rig.active{border-color:#6ee7b7;animation:pulse 2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.6}}
-.upgrade-banner{display:none;background:#1a1000;border:1px solid #f7931a;border-radius:6px;padding:10px 14px;margin-bottom:1rem;font-size:12px;color:#f7931a;text-align:center}
-.hacker-area{background:#1a0a0a;border:1px solid #c83030;border-radius:6px;padding:10px 12px;margin-bottom:1rem}
+.upgrade-banner{display:none;background:rgba(247,147,26,0.1);border:1px solid rgba(247,147,26,0.4);border-radius:10px;padding:10px 14px;margin-bottom:1rem;font-size:12px;font-weight:600;color:#f7931a;text-align:center}
+.hacker-area{background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.25);border-radius:10px;padding:10px 12px;margin-bottom:1rem}
 .hacker-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
-.hacker-label{font-size:10px;color:#c83030;letter-spacing:1px}
-.hacker-timer{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:#ff4444}
-.hacker-info{font-size:10px;color:#6a7060;margin-bottom:8px}
-.hacker-bar-track{background:#1a1c16;border-radius:3px;height:6px;width:100%;margin-bottom:8px;overflow:hidden}
-.hacker-bar-fill{height:100%;border-radius:3px;background:#ff4444;transition:width 0.3s}
-.btn-firewall{font-family:'Share Tech Mono',monospace;font-size:11px;padding:8px 14px;background:#1a0a0a;border:1px solid #c83030;border-radius:6px;color:#c83030;cursor:pointer;letter-spacing:1px;transition:all 0.15s;width:100%}
-.btn-firewall:hover,.btn-firewall:active{background:#c83030;color:#0d0f0a}
+.hacker-label{font-size:10px;color:#f87171;letter-spacing:1px;font-weight:600;text-transform:uppercase}
+.hacker-timer{font-family:'Orbitron',sans-serif;font-size:16px;font-weight:700;color:#f87171}
+.hacker-info{font-size:10px;color:#64748b;margin-bottom:8px;font-weight:500}
+.hacker-bar-track{background:#1e2330;border-radius:6px;height:6px;width:100%;margin-bottom:8px;overflow:hidden}
+.hacker-bar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,#f87171,#ef4444);transition:width 0.3s}
+.btn-firewall{font-family:'Inter',sans-serif;font-size:11px;font-weight:600;padding:8px 14px;background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.25);border-radius:8px;color:#f87171;cursor:pointer;letter-spacing:0.5px;transition:all 0.2s;width:100%}
+.btn-firewall:hover,.btn-firewall:active{background:#f87171;color:#0f1117}
 .btn-firewall:disabled{opacity:0.3;cursor:not-allowed}
 .hacker-flash{animation:hackerFlash 0.5s ease 3}
-@keyframes hackerFlash{0%,100%{border-color:#c83030}50%{border-color:#ff0000;box-shadow:0 0 15px rgba(255,0,0,0.4)}}
-.btc-held{font-size:11px;color:#6a7060;text-align:center;margin-bottom:8px}
-#instructions{display:none;position:absolute;inset:0;background:#0d0f0a;border-radius:var(--border-radius-lg);padding:1.5rem;z-index:10;overflow-y:auto}
+@keyframes hackerFlash{0%,100%{border-color:rgba(248,113,113,0.25)}50%{border-color:#f87171;box-shadow:0 0 20px rgba(248,113,113,0.3)}}
+.btc-held{font-size:11px;color:#64748b;text-align:center;margin-bottom:8px;font-weight:500}
+#instructions{display:none;position:absolute;inset:0;background:#0f1117;border-radius:var(--border-radius-lg);padding:1.5rem;z-index:10;overflow-y:auto}
 .instr-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.2rem}
 .instr-title{font-family:'Orbitron',sans-serif;font-size:18px;font-weight:700;color:#f7931a;letter-spacing:2px}
-.btn-close{font-family:'Share Tech Mono',monospace;font-size:11px;padding:5px 10px;background:#141710;border:1px solid #2a2e20;border-radius:6px;color:#6a7060;cursor:pointer;letter-spacing:1px}
+.btn-close{font-family:'Inter',sans-serif;font-size:11px;font-weight:500;padding:5px 10px;background:#1e2330;border:1px solid #2d3548;border-radius:8px;color:#64748b;cursor:pointer;letter-spacing:0.5px}
 .btn-close:hover{border-color:#f7931a;color:#f7931a}
 .instr-section{margin-bottom:1.2rem}
-.instr-section-title{font-size:11px;color:#f7931a;letter-spacing:2px;margin-bottom:8px;border-bottom:1px solid #2a2e20;padding-bottom:4px}
-.instr-body{font-size:12px;color:#a0a890;line-height:1.9}
+.instr-section-title{font-size:11px;color:#f7931a;letter-spacing:2px;margin-bottom:8px;border-bottom:1px solid #2d3548;padding-bottom:4px;font-weight:600}
+.instr-body{font-size:12px;color:#94a3b8;line-height:1.9}
 .instr-body p{margin-bottom:8px}
 .instr-list{list-style:none;padding:0;margin:6px 0 0 0}
-.instr-list li{font-size:12px;color:#a0a890;line-height:1.9;padding-left:14px;position:relative}
-.instr-list li::before{content:'//';position:absolute;left:0;color:#f7931a;font-size:10px}
+.instr-list li{font-size:12px;color:#94a3b8;line-height:1.9;padding-left:14px;position:relative}
+.instr-list li::before{content:'\203A';position:absolute;left:0;color:#f7931a;font-size:14px;font-weight:700}
 
 /* Mobile responsive */
 @media(max-width:480px){
@@ -107,7 +107,7 @@ h1{font-family:'Orbitron',sans-serif;font-size:20px;font-weight:700;color:#f7931
 }
 
 /* Prevent body scroll bounce and set full-screen dark bg */
-html,body{margin:0;padding:0;background:#0d0f0a;overflow-x:hidden}
+html,body{margin:0;padding:0;background:#0f1117;overflow-x:hidden}
 </style>
 
 <div id="game">
@@ -157,7 +157,7 @@ html,body{margin:0;padding:0;background:#0d0f0a;overflow-x:hidden}
     <div class="top-row">
       <div>
         <h1>&#9889; HIDDEN HASH</h1>
-        <div class="subtitle">MINE. TRADE. SURVIVE. // PRICE IS HIDDEN</div>
+        <div class="subtitle">Mine. Trade. Survive — Price Unknown.</div>
       </div>
       <button class="btn-help" onclick="openInstructions()">? HOW TO PLAY</button>
     </div>
@@ -178,21 +178,21 @@ html,body{margin:0;padding:0;background:#0d0f0a;overflow-x:hidden}
     </div>
 
     <div class="chart-area">
-      <div class="chart-label">PRICE SIGNAL (last 60 ticks) // SCALE HIDDEN</div>
+      <div class="chart-label">Price Signal — Last 60 Ticks</div>
       <canvas id="priceCanvas" height="100"></canvas>
-      <div class="hint-bar" id="hintBar">analyzing market conditions...</div>
+      <div class="hint-bar" id="hintBar">Analyzing market conditions...</div>
     </div>
 
     <div class="btc-held" id="portfolioVal">net worth: $1,000</div>
 
     <div class="goal-area">
-      <div class="goal-label">CURRENT OBJECTIVE // USD BALANCE ONLY</div>
+      <div class="goal-label">Current Objective</div>
       <div class="goal-title" id="goalTitle">REACH $2,500</div>
       <div class="progress-track"><div class="progress-fill" id="progressFill" style="width:0%;background:#378add"></div></div>
       <div class="goal-meta">
-        <span id="goalCurrent" style="color:#c8d4a0">top high: $1,000</span>
-        <span id="goalReward" style="color:#4db8a0"></span>
-        <span id="goalTarget" style="color:#6a7060">$2,500</span>
+        <span id="goalCurrent" style="color:#cbd5e1">top high: $1,000</span>
+        <span id="goalReward" style="color:#6ee7b7"></span>
+        <span id="goalTarget" style="color:#64748b">$2,500</span>
       </div>
     </div>
 
@@ -203,18 +203,18 @@ html,body{margin:0;padding:0;background:#0d0f0a;overflow-x:hidden}
 
     <div class="hacker-area" id="hackerArea">
       <div class="hacker-header">
-        <div class="hacker-label">&#9760; HACKER THREAT</div>
+        <div class="hacker-label">&#9760; Threat Active</div>
         <div class="hacker-timer" id="hackerTimer">1:30</div>
       </div>
       <div class="hacker-bar-track"><div class="hacker-bar-fill" id="hackerBar" style="width:100%"></div></div>
-      <div class="hacker-info" id="hackerInfo">hackers will steal BTC in 1:30 // interval: 1:30</div>
-      <button class="btn-firewall" id="firewallBtn" onclick="buyFirewall()">&#128274; UPGRADE FIREWALL — $50 // +5s delay</button>
+      <div class="hacker-info" id="hackerInfo">Hackers strike in 1:30 — interval: 1:30</div>
+      <button class="btn-firewall" id="firewallBtn" onclick="buyFirewall()">&#128274; Upgrade Firewall — $50 (+5s delay)</button>
     </div>
 
     <div class="upgrade-banner" id="upgradeBanner"></div>
 
     <div class="rigs-area">
-      <div class="rig-label">MINING RIGS ONLINE</div>
+      <div class="rig-label">Active Rigs</div>
       <div class="rig-grid" id="rigGrid"></div>
     </div>
 
@@ -293,9 +293,9 @@ function checkGoal(){
     state.buyCost=Math.max(2,state.buyCost-2);
     const b=document.getElementById('upgradeBanner');
     b.style.display='block';
-    b.textContent='&#9889; GOAL $'+g.target.toLocaleString()+' CLEARED // BUY COST NOW $'+state.buyCost;
+    b.textContent='&#9889; Goal $'+g.target.toLocaleString()+' cleared — buy cost now $'+state.buyCost;
     setTimeout(()=>{b.style.display='none'},4000);
-    log('GOAL $'+g.target.toLocaleString()+' REACHED // buy cost -> $'+state.buyCost,'upgrade');
+    log('Goal $'+g.target.toLocaleString()+' reached — buy cost now $'+state.buyCost,'upgrade');
     state.goalIndex++;
     updateBuyButton();updateGoalUI();
   }
@@ -342,14 +342,14 @@ function updatePrice(){
 
 function getHint(){
   const h=state.priceHistory;
-  if(h.length<5)return'initializing feed...';
+  if(h.length<5)return'Initializing feed...';
   const last=h[h.length-1],prev=h[h.length-5],chg=(last-prev)/prev;
   const recent=h.slice(-10),vol=(Math.max(...recent)-Math.min(...recent))/last;
-  if(Math.random()<0.03)return'WHALE MOVEMENT DETECTED';
-  if(Math.random()<0.02)return'rumor: difficulty adjust incoming';
-  if(Math.abs(chg)>0.05)return chg>0?'upward momentum detected':'downward pressure detected';
-  if(vol>0.06)return'high volatility // tread carefully';
-  return'sideways chop // holding pattern';
+  if(Math.random()<0.03)return'Whale movement detected';
+  if(Math.random()<0.02)return'Rumor: difficulty adjustment incoming';
+  if(Math.abs(chg)>0.05)return chg>0?'Upward momentum detected':'Downward pressure detected';
+  if(vol>0.06)return'High volatility — tread carefully';
+  return'Sideways chop — holding pattern';
 }
 
 function drawChart(){
@@ -359,9 +359,9 @@ function drawChart(){
   const h=state.priceHistory;if(h.length<2)return;
   const mn=Math.min(...h),mx=Math.max(...h),range=mx-mn||1;
   const W=canvas.width,H=canvas.height;
-  ctx.strokeStyle='rgba(77,184,160,0.15)';ctx.lineWidth=1;
+  ctx.strokeStyle='rgba(110,231,183,0.1)';ctx.lineWidth=1;
   for(let i=0;i<4;i++){const y=10+i*(H-10)/3;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke();}
-  ctx.strokeStyle='#4db8a0';ctx.lineWidth=1.5;ctx.beginPath();
+  ctx.strokeStyle='#6ee7b7';ctx.lineWidth=1.5;ctx.beginPath();
   h.forEach((p,i)=>{
     const x=(i/(h.length-1))*W,y=H-((p-mn)/range)*(H-10)-5;
     i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
@@ -373,7 +373,7 @@ function doBuy(){
   if(state.balance<state.buyCost)return;
   const acquired=state.buyCost/state.price;
   state.balance-=state.buyCost;state.btc+=acquired;
-  log('BOUGHT '+acquired.toFixed(5)+' BTC for $'+state.buyCost+' // price unknown','good');
+  log('Bought '+acquired.toFixed(5)+' BTC for $'+state.buyCost+' — price unknown','good');
   updateUI();
 }
 
@@ -381,7 +381,7 @@ function doSell(){
   if(state.btc<0.0001)return;
   const portion=state.btc*0.20,proceeds=portion*state.price;
   state.btc-=portion;state.balance+=proceeds;
-  log('SOLD 20% ('+portion.toFixed(5)+' BTC) // received $'+Math.round(proceeds).toLocaleString(),'bad');
+  log('Sold 20% ('+portion.toFixed(5)+' BTC) — received $'+Math.round(proceeds).toLocaleString(),'good');
   updateUI();checkGoal();
 }
 
@@ -390,17 +390,17 @@ function buyFirewall(){
   state.balance-=50;
   state.hackerInterval+=5;
   state.hackerCountdown+=5;
-  log('FIREWALL UPGRADED // hacker interval now '+state.hackerInterval+'s','upgrade');
+  log('Firewall upgraded — hacker interval now '+state.hackerInterval+'s','upgrade');
   updateUI();updateHackerUI();
 }
 
 function hackerAttack(){
   if(state.btc<0.00001){
-    log('HACK ATTEMPTED // no BTC to steal','bad');
+    log('Hack attempted — no BTC to steal','bad');
   }else{
     const stolen=state.btc*0.10;
     state.btc-=stolen;
-    log('HACKED // lost '+stolen.toFixed(5)+' BTC (10%)','bad');
+    log('Hacked — lost '+stolen.toFixed(5)+' BTC (10%)','bad');
     document.getElementById('hackerArea').classList.add('hacker-flash');
     setTimeout(()=>document.getElementById('hackerArea').classList.remove('hacker-flash'),1600);
   }
@@ -417,7 +417,7 @@ function updateHackerUI(){
   const pct=(state.hackerCountdown/state.hackerInterval)*100;
   document.getElementById('hackerTimer').textContent=fmtTime(state.hackerCountdown);
   document.getElementById('hackerBar').style.width=pct.toFixed(1)+'%';
-  document.getElementById('hackerInfo').textContent='hackers will steal BTC in '+fmtTime(state.hackerCountdown)+' // interval: '+fmtTime(state.hackerInterval);
+  document.getElementById('hackerInfo').textContent='Hackers strike in '+fmtTime(state.hackerCountdown)+' — interval: '+fmtTime(state.hackerInterval);
   document.getElementById('firewallBtn').disabled=state.balance<50;
 }
 
@@ -429,8 +429,8 @@ function tick(){
 }
 
 renderRigs();
-log('node online // goals track top high USD cash // sell BTC to push it up');
-log('WARNING: hackers detected on network // countdown started','bad');
+log('Node online — goals track your top USD balance. Sell BTC to push it up.');
+log('Warning: hackers detected on the network. Countdown started.','bad');
 updateUI();updateHackerUI();
 setInterval(tick,1500);
 setInterval(function(){
